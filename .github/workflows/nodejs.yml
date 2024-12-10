@@ -25,7 +25,8 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: "${{ steps.nvm.outputs.NVMRC }}"
-
+    - run: sudo apt get update
+    - run: sudo apt install -y docker-compose
     - run: npm ci
     - run: npm test
     - run: npm run test:nestjs
