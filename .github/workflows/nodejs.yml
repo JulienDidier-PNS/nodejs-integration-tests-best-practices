@@ -47,22 +47,23 @@ jobs:
         with:
           node-version: "${{ steps.nvm.outputs.NVMRC }}"
 
-      #  Etape de cache pour les dépendances npm
-
-      - run: sudo apt-get update
-      - run: sudo apt-get install -y docker-compose
-
-      - name: Cache Node.js modules
+      # Étape de cache pour npm
+      - name: Cache npm modules
         uses: actions/cache@v3
         with:
-          path: |
-            ~/.npm
+          path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - run: npm ci --cache  ~/.npm
+      - run: sudo apt-get update
+      - run: sudo apt-get install -y docker-compose
 
+      # Installer les dépendances
+      - run: npm ci
+
+      # Exécuter les tests
       - run: npm test
       - run: npm run test:nestjs
       - run: npm run test:mocha
+ 
