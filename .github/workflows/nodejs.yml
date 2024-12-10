@@ -80,11 +80,23 @@ jobs:
       - run: sudo apt-get update
       - run: sudo apt-get install -y docker-compose
 
+      - name: Sharing with other jobs
+        run: mkdir -p ~/node-modules
+      - uses: actions/upload-artifact@v4
+        with:
+          name: node-modules
+          path: ~/node-modules
+
   nestjsTest:
     name: Run nestjs test
     needs: build_with_cache
     runs-on: ubuntu-latest
     steps:
+      - name: Get node-modules
+        uses: actions/download-artifact@v4
+        with:
+          name: node-modules
+          path: ~/node-modules
       - name: Run nextjs test
         run: npm run test:nestjs
 
@@ -93,5 +105,10 @@ jobs:
     needs: build_with_cache
     runs-on: ubuntu-latest
     steps:
+      - name: Get node-modules
+        uses: actions/download-artifact@v4
+        with:
+          name: node-modules
+          path: ~/node-modules
       - name: Run nextjs test
         run: npm run test:mocha
