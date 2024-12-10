@@ -54,7 +54,7 @@ jobs:
       # Installer les dépendances
       - run: npm ci
 
-      - run: npm cache add . --max-age=1000 --cache-min=9999999
+      - run: npm cache add . --max-age=1000 --prefer-offline
 
       # Exécuter les tests
       - run: npm test
