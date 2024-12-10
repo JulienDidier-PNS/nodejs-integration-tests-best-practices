@@ -54,7 +54,7 @@ jobs:
       # Installer les dépendances
       - run: npm ci --prefer-offline
 
-      - run: npm cache add .
+      - run: npm cache add ~/.npm
 
       # Exécuter les tests
       - run: npm test
