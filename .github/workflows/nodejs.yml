@@ -80,10 +80,18 @@ jobs:
       - run: sudo apt-get update
       - run: sudo apt-get install -y docker-compose
 
-      # Exécuter les tests
-      - name: Run tests
-        run: |
-          npm test
-          npm run test:nestjs
-          npm run test:mocha
+  nestjsTest:
+    name: Run nestjs test
+    needs: build_with_cache
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run nextjs test
+        run: npm run test:nestjs
 
+  mochaTest:
+    name: Run mochatest test
+    needs: build_with_cache
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run nextjs test
+        run: npm run test:mocha
