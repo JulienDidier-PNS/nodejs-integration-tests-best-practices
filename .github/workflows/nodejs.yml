@@ -52,9 +52,9 @@ jobs:
       - run: sudo apt-get install -y docker-compose
 
       # Installer les dépendances
-      - run: npm ci
+      - run: npm ci --prefer-offline
 
-      - run: npm cache add . --max-age=1000 --prefer-offline
+      - run: npm cache add .
 
       # Exécuter les tests
       - run: npm test
