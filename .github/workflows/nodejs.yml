@@ -48,8 +48,8 @@ jobs:
           node-version: "${{ steps.nvm.outputs.NVMRC }}"
       - run: sudo apt-get update
       - run: sudo apt-get install -y docker-compose
-      - run: npm set cache .npm
       - run: npm ci
+      - run: npm set cache .npm
       - run: npm test
       - run: npm run test:nestjs
       - run: npm run test:mocha
