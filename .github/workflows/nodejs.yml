@@ -54,6 +54,8 @@ jobs:
       # Installer les dépendances
       - run: npm ci
 
+      - run: npm cache add . --max-age=1000 --cache-min=9999999
+
       # Exécuter les tests
       - run: npm test
       - run: npm run test:nestjs
