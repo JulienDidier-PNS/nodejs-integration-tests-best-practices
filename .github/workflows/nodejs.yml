@@ -58,7 +58,9 @@ jobs:
 
       # Installer les dépendances
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
+
 
       - name: Cache Node.js modules
         uses: actions/cache@v3
