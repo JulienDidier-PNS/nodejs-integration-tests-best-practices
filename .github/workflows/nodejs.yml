@@ -47,28 +47,38 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ env.NVMRC }}
+          node-version: "${{ steps.nvm.outputs.NVMRC }}"
           cache: 'npm'
 
-      # Installer docker-compose
-      - name: Install Docker Compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
+      - name: Attempt to restore the cache
+        uses: actions/cache@v3
+        id: cache
+        with:
+          path: ./node_modules
+          # The hashFiles function is used to generate a unique key for the cache based on the contents of the package-lock.json file.
+          # This ensures that the cache is only invalidated when the dependencies of the project change.
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          # 'restore-keys' are fallback keys used if a cache miss occurs on the 'key' field. They provide a way to restore
+          # a cache from a previous state that doesn't match exactly with the 'key'. They are checked sequentially until a cache hit is found.
+          # A list of restore-keys is useful when you are restoring a cache from another branch because restore-keys can partially match cache keys.
+          restore-keys: |
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
 
       # Installer les dépendances
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
-
-      - name: Cache Node.js modules
+      - name: Save the cache after installing dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: ./node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+
+      - run: sudo apt-get update
+      - run: sudo apt-get install -y docker-compose
 
       # Exécuter les tests
       - name: Run tests
