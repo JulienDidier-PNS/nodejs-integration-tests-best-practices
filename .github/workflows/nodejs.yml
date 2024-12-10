@@ -48,20 +48,21 @@ jobs:
           node-version: "${{ steps.nvm.outputs.NVMRC }}"
 
       #  Etape de cache pour les dépendances npm
-      - name: Cache Node.js modules
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
 
       - run: sudo apt-get update
       - run: sudo apt-get install -y docker-compose
 
-      - run: npm ci
-        
+      - run: npm ci --cache .npm
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ./npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - run: npm test
       - run: npm run test:nestjs
       - run: npm run test:mocha
